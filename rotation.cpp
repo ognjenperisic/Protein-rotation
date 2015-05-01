@@ -114,7 +114,7 @@ p_atom* p_atom::Load(char* cFileName)
     {
         line=readln;
 
-        if (line.substr(0,4)=="ATOM")//&&(line.substr(13,4)==" CA "))
+        if (line.substr(0,4)=="ATOM")
         {
             if (line.substr(26,1)==" ")
             {                              
@@ -144,11 +144,10 @@ p_atom* p_atom::Load(char* cFileName)
             } 
         }
         
-        if (line.substr(0,6)=="HETATM")//&&(line.substr(13,4)==" CA "))
+        if (line.substr(0,6)=="HETATM")
         {
             if (line.substr(26,1)==" ")
-            {                    
-                //if (line.substr(12,4)==" CA ")
+            {
                 if (line.substr(13,2)!="HH")
                 {
                     transforms(line,xc,27,12);
@@ -174,8 +173,6 @@ p_atom* p_atom::Load(char* cFileName)
                 }
             } 
         }
-
-
     }   
     fin.close();
     carbon->ChainLink_forward(NULL);
@@ -284,11 +281,8 @@ int p_atom::MinMax()
 {
    p_atom* first_loop;
    p_atom* second_loop;
-   
    float dist=0,max_dist=0;
    float dist1=0,dist2=0;
-   //long int br=0;
-
 
    first_loop=p_atom::last_atom;
    
@@ -314,9 +308,7 @@ int p_atom::MinMax()
                    p_atom::max_2=first_loop;
                    p_atom::max_1=second_loop;
                }
-
            }
-           //br++;
            second_loop=second_loop->NextLink_forward();
        }
        first_loop=first_loop->NextLink_forward();
@@ -396,11 +388,6 @@ int p_atom::Rotation(char what)
         max_x=p_atom::max_3->x,  min_x=p_atom::max_3->x;
         max_y=p_atom::max_3->y,  min_y=0;
         max_z=p_atom::max_3->z,  min_z=0;
-
-        //p_atom::max_2->x=p_atom::max_3->x;
-        //p_atom::max_2->y=0;
-        //p_atom::max_2->z=0;
-        //p_atom::max_1=p_atom::max_3;
 
         mp=1*((max_y)/fabs(max_y))*((max_z)/fabs(max_z));
         R=                          sqrt(pow(max_y-min_y,2)+ pow(max_z-min_z,2));
