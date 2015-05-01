@@ -9,4 +9,4 @@ The first code depicted here, **rotation.cpp**, reorients a given molecule (pdb 
 The second code, **rotation_2.cpp**, reorients a molecule (pdb file), so the vector between two given residues is aligned with the X axis. This is useful in steered molecular dynamics simulations. The similar functionality exists in most major molecular modelling tools.
 
 
-The code is written in bare bones C++, with no additional libraries. It is a direct application of high school geometry. 
+The code is written in bare bones C++, with no additional libraries. 
