@@ -273,7 +273,6 @@ int p_atom::Distance()
         }
         temp_atom=temp_atom->NextLink_forward();
     }
-
     return 0;
 }
 
