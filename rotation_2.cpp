@@ -1,5 +1,3 @@
-// rotation_2.cpp : Defines the entry point for the console application.
-//
 /* Rotation of the molecule (pdb file), so the vector between two given residues
 1 & 2 is aligned with the X axis*/
 
