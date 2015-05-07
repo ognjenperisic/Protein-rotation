@@ -114,7 +114,7 @@ p_atom* p_atom::Load(char* cFileName)
     while (fin.getline(readln,256)) {
         line=readln;
 
-        if (line.substr(0,4)=="ATOM")//&&(line.substr(13,4)==" CA "))
+        if (line.substr(0,4)=="ATOM")
         {
             if (line.substr(26,1)==" ") {                
                 if (line.substr(13,2)!="HH") {
@@ -141,11 +141,18 @@ p_atom* p_atom::Load(char* cFileName)
             } 
         }
         
-        if (line.substr(0,6)=="HETATM")//&&(line.substr(13,4)==" CA "))
+        if (line.substr(0,6)=="HETATM")
         {
+<<<<<<< HEAD
             if (line.substr(26,1)==" ") {                    
                 
                 if (line.substr(13,2)!="HH"){
+=======
+            if (line.substr(26,1)==" ")
+            {
+                if (line.substr(13,2)!="HH")
+                {
+>>>>>>> c7e77fa7c16a8e851af244176edeb731c5cbb669
                     transforms(line,xc,27,12);
                     transforms(line,yc,39,8);
                     transforms(line,zc,47,8);
@@ -168,8 +175,6 @@ p_atom* p_atom::Load(char* cFileName)
                 }
             } 
         }
-
-
     }   
     fin.close();
     carbon->ChainLink_forward(NULL);
@@ -270,7 +275,6 @@ int p_atom::Distance()
         }
         temp_atom=temp_atom->NextLink_forward();
     }
-
     return 0;
 }
 
@@ -278,11 +282,13 @@ int p_atom::MinMax()
 {
    p_atom* first_loop;
    p_atom* second_loop;
-   
    float dist=0,max_dist=0;
    float dist1=0,dist2=0;
+<<<<<<< HEAD
    
 
+=======
+>>>>>>> c7e77fa7c16a8e851af244176edeb731c5cbb669
 
    first_loop=p_atom::last_atom;
    
@@ -351,10 +357,12 @@ int p_atom::MinMax_s()
                    p_atom::max_2=first_loop;
                    p_atom::max_1=second_loop;
                }
-
            }
+<<<<<<< HEAD
            br++;
 
+=======
+>>>>>>> c7e77fa7c16a8e851af244176edeb731c5cbb669
            second_loop=second_loop->NextLink_forward();
        }
        first_loop=first_loop->NextLink_forward();
@@ -434,7 +442,10 @@ int p_atom::Rotation(char what)
         max_y=p_atom::max_3->y,  min_y=0;
         max_z=p_atom::max_3->z,  min_z=0;
 
+<<<<<<< HEAD
         
+=======
+>>>>>>> c7e77fa7c16a8e851af244176edeb731c5cbb669
         mp=1*((max_y)/fabs(max_y))*((max_z)/fabs(max_z));
         R=                          sqrt(pow(max_y-min_y,2)+ pow(max_z-min_z,2));
         sin_b=mp*abs(max_y-min_y)/R;  cos_b=(max_z-min_z)/R;  //rotation in XZ plane
@@ -523,24 +534,21 @@ int main(int argc, char* argv[])
                    
                    pDel = carbon;
                }
-               //delete carbon;
-			   // carbon=NULL;					
-               //p_atom::First=NULL;
-
-                // FINISH
+               
+               // FINISH
 					
-                fFinished=FALSE;
+               fFinished=FALSE;
 					 
-                if (!FindNextFile(hSearch, &FileData)) {
-                    if (GetLastError() == ERROR_NO_MORE_FILES) {                             
-                        fFinished = TRUE; 
+               if (!FindNextFile(hSearch, &FileData)) {
+                   if (GetLastError() == ERROR_NO_MORE_FILES) {                             
+                       fFinished = TRUE; 
                        
-                    } 
-                    else { 
-                        printf("Couldn't find next file."); 
-                        return 0;
-                    } 
-                }
+                   } 
+                   else { 
+                       printf("Couldn't find next file."); 
+                       return 0;
+                   } 
+               }
            }
        }
    }
