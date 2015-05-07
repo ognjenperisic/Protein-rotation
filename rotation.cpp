@@ -143,16 +143,16 @@ p_atom* p_atom::Load(char* cFileName)
         
         if (line.substr(0,6)=="HETATM")
         {
-<<<<<<< HEAD
+
             if (line.substr(26,1)==" ") {                    
                 
                 if (line.substr(13,2)!="HH"){
-=======
+
             if (line.substr(26,1)==" ")
             {
                 if (line.substr(13,2)!="HH")
                 {
->>>>>>> c7e77fa7c16a8e851af244176edeb731c5cbb669
+
                     transforms(line,xc,27,12);
                     transforms(line,yc,39,8);
                     transforms(line,zc,47,8);
@@ -442,10 +442,6 @@ int p_atom::Rotation(char what)
         max_y=p_atom::max_3->y,  min_y=0;
         max_z=p_atom::max_3->z,  min_z=0;
 
-<<<<<<< HEAD
-        
-=======
->>>>>>> c7e77fa7c16a8e851af244176edeb731c5cbb669
         mp=1*((max_y)/fabs(max_y))*((max_z)/fabs(max_z));
         R=                          sqrt(pow(max_y-min_y,2)+ pow(max_z-min_z,2));
         sin_b=mp*abs(max_y-min_y)/R;  cos_b=(max_z-min_z)/R;  //rotation in XZ plane
