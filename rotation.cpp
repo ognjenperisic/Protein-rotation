@@ -23,11 +23,13 @@ class p_atom
      p_atom* NextLink(){ return this->link;};
      p_atom* NextLink_forward(){ return this->link_forward;};
 
-     int Save(char* cFileName, char* dir1,char* extension);
+     int Save(char* cFileName, char* extension);
      int ChainLink(p_atom* connect){this->link=connect; return 0;};
      int ChainLink_forward(p_atom* connect){this->link_forward=connect; return 0;};
-     int Rotation(char what);     
-     int MinMax();     
+     int Rotation(char what);
+     
+     int MinMax();
+     
      int Translation();
      float Distance_3D();
      int Distance();
@@ -72,12 +74,11 @@ void transforms(string a, int &br, int x, int y)
     br=atoi(numb);
 }
 
-int ImeFajla(char* file_name,char* extension,char* original_file,char CurrProt)
+int FileName(char* file_name,char* extension,char* original_file,char CurrProt)
 {    
     int i=0;  
     file_name[0]='\0';
-    do
-    {				    
+    do {				    
         file_name[i]=original_file[i];
         i++;
     }
@@ -110,16 +111,13 @@ p_atom* p_atom::Load(char* cFileName)
     float xc,yc,zc;
     BOOL begg=true;
 
-    while (fin.getline(readln,256))
-    {
+    while (fin.getline(readln,256)) {
         line=readln;
 
         if (line.substr(0,4)=="ATOM")//&&(line.substr(13,4)==" CA "))
         {
-            if (line.substr(26,1)==" ")
-            {                              
-                if (line.substr(13,2)!="HH")
-                {
+            if (line.substr(26,1)==" ") {                
+                if (line.substr(13,2)!="HH") {
                     transforms(line,xc,27,12);
                     transforms(line,yc,39,8);
                     transforms(line,zc,47,8);
@@ -134,8 +132,7 @@ p_atom* p_atom::Load(char* cFileName)
                     
                     if (!begg)
                         carbon->NextLink()->ChainLink_forward(carbon);
-                    if(begg)
-                    {
+                    if(begg) {
                         p_atom::last_atom=carbon;
                         begg=false;
                     }                    
@@ -146,11 +143,9 @@ p_atom* p_atom::Load(char* cFileName)
         
         if (line.substr(0,6)=="HETATM")//&&(line.substr(13,4)==" CA "))
         {
-            if (line.substr(26,1)==" ")
-            {                    
-                //if (line.substr(12,4)==" CA ")
-                if (line.substr(13,2)!="HH")
-                {
+            if (line.substr(26,1)==" ") {                    
+                
+                if (line.substr(13,2)!="HH"){
                     transforms(line,xc,27,12);
                     transforms(line,yc,39,8);
                     transforms(line,zc,47,8);
@@ -165,8 +160,7 @@ p_atom* p_atom::Load(char* cFileName)
                     
                     if (!begg)
                         carbon->NextLink()->ChainLink_forward(carbon);
-                    if(begg)
-                    {
+                    if(begg) {
                         p_atom::last_atom=carbon;
                         begg=false;
                     }                    
@@ -182,22 +176,22 @@ p_atom* p_atom::Load(char* cFileName)
     return carbon;
 }
 
-int p_atom::Save(char *cFileName,char* dir1,char* extension)
+int p_atom::Save(char *cFileName, char* extension)
 {
     p_atom* temp_atom;
     char file_name_temp[256];
     char file_name[256];
 
     file_name_temp[0]='\0';
-    strcpy(file_name_temp,dir1);
-    strcat(file_name_temp,"\\");
-    strcat(file_name_temp,cFileName);    
-    ImeFajla(file_name,extension,file_name_temp,'\0');
+    //strcpy(file_name_temp,dir1);
+    //strcat(file_name_temp,"\\");
+    strcat(file_name_temp,cFileName);
+    
+    FileName(file_name,extension,file_name_temp,'\0');
     ofstream fout(file_name);
     
     temp_atom=p_atom::last_atom;                   
-    while(temp_atom)
-    {
+    while(temp_atom) {
         fout<<temp_atom->description1;
         fout.width(8);
         fout.setf(ios::fixed);
@@ -210,9 +204,11 @@ int p_atom::Save(char *cFileName,char* dir1,char* extension)
         fout<<temp_atom->y;
         fout.width(8);
         fout.precision(3);
-        fout.setf(ios::right,ios::adjustfield);        
+        fout.setf(ios::right,ios::adjustfield);
+        
         fout<<temp_atom->z;
-        fout<<" "<<temp_atom->description2<<endl;        
+        fout<<" "<<temp_atom->description2<<endl;
+        
         temp_atom=temp_atom->NextLink_forward();
     }
     fout.close();
@@ -266,11 +262,9 @@ int p_atom::Distance()
 
     temp_atom=p_atom::last_atom;                   
 
-    while(temp_atom)
-    {
+    while(temp_atom) {
         temp_distance=temp_atom->Distance_3D();
-        if (temp_distance>=max_distance)
-        {
+        if (temp_distance>=max_distance) {
             p_atom::max_3=temp_atom;
             max_distance=temp_distance;
         }
@@ -287,15 +281,58 @@ int p_atom::MinMax()
    
    float dist=0,max_dist=0;
    float dist1=0,dist2=0;
-   //long int br=0;
+   
 
 
    first_loop=p_atom::last_atom;
    
+   while(first_loop) {                         
+       
+       second_loop=first_loop->NextLink_forward();
+
+       while(second_loop) {
+           dist=sqrt(pow(first_loop->x-second_loop->x,2)+pow(first_loop->y-second_loop->y,2)+pow(first_loop->z-second_loop->z,2));
+           if (dist>max_dist) {
+               dist1=sqrt(first_loop->x*first_loop->x+first_loop->y*first_loop->y+first_loop->z*first_loop->z);
+               dist2=sqrt(second_loop->x*second_loop->x+second_loop->y*second_loop->y+second_loop->z*second_loop->z);
+               max_dist=dist;
+
+               if (dist2<=dist1){
+                   p_atom::max_1=first_loop;
+                   p_atom::max_2=second_loop;
+               }
+               else {
+                   p_atom::max_2=first_loop;
+                   p_atom::max_1=second_loop;
+               }
+
+           }
+           
+           second_loop=second_loop->NextLink_forward();
+       }
+       first_loop=first_loop->NextLink_forward();
+   }
+
+   
+   return 0;
+}
+
+
+/*
+int p_atom::MinMax_s()
+{    
+   p_atom* first_loop;
+   p_atom* second_loop;
+ 
+   float dist=0,max_dist=0;
+   float dist1=0,dist2=0;
+   first_loop=p_atom::last_atom;
+   long int br=0;
+   
    while(first_loop)
    {                         
-       //second_loop=p_atom::last_atom;
-       second_loop=first_loop->NextLink_forward();
+       second_loop=p_atom::last_atom;
+       //second_loop=first_loop->NextLink_forward();
        while(second_loop)
        {
            dist=sqrt(pow(first_loop->x-second_loop->x,2)+pow(first_loop->y-second_loop->y,2)+pow(first_loop->z-second_loop->z,2));
@@ -316,16 +353,17 @@ int p_atom::MinMax()
                }
 
            }
-           //br++;
+           br++;
+
            second_loop=second_loop->NextLink_forward();
        }
        first_loop=first_loop->NextLink_forward();
    }
-   
+
+   cout<<"broj iteracija :"<<br<<endl;
    return 0;
 }
-
-
+*/
 
 
 int p_atom::Translation()
@@ -342,9 +380,11 @@ int p_atom::Translation()
     float min_y=p_atom::max_2->y;    
     float min_z=p_atom::max_2->z;
 
+   
+
+
     first_loop=p_atom::last_atom;
-    while(first_loop)
-    {
+    while(first_loop) {
         first_loop->x=first_loop->x-min_x;
         first_loop->y=first_loop->y-min_y;
         first_loop->z=first_loop->z-min_z;
@@ -376,32 +416,25 @@ int p_atom::Rotation(char what)
     double R;
     float mp;
     
-    if (!what)
-    {
+    if (!what) {
         mp=(-1)*((max_x)/fabs(max_x))*((max_y)/fabs(max_y));
 
         R=sqrt(pow(max_x-min_x,2)+pow(max_y-min_y,2)                     );
         sin_a=mp*abs(max_y-min_y)/R;  cos_a=(max_x-min_x)/R;  //rotation in XY plane
     }
 
-    if (what==1)
-    {
+    if (what==1) {
         mp=-1*((max_x)/fabs(max_x))*((max_z)/fabs(max_z));
         R=sqrt(pow(max_x-min_x,2)+                     pow(max_z-min_z,2));
         sin_b=mp*abs(max_z-min_z)/R;  cos_b=(max_x-min_x)/R;  //rotation in XZ plane
     }
 
-    if (what==2)
-    {
+    if (what==2){
         max_x=p_atom::max_3->x,  min_x=p_atom::max_3->x;
         max_y=p_atom::max_3->y,  min_y=0;
         max_z=p_atom::max_3->z,  min_z=0;
 
-        //p_atom::max_2->x=p_atom::max_3->x;
-        //p_atom::max_2->y=0;
-        //p_atom::max_2->z=0;
-        //p_atom::max_1=p_atom::max_3;
-
+        
         mp=1*((max_y)/fabs(max_y))*((max_z)/fabs(max_z));
         R=                          sqrt(pow(max_y-min_y,2)+ pow(max_z-min_z,2));
         sin_b=mp*abs(max_y-min_y)/R;  cos_b=(max_z-min_z)/R;  //rotation in XZ plane
@@ -410,27 +443,26 @@ int p_atom::Rotation(char what)
     while(loop)
     {     
         
+        
         x_temp=loop->x;
         y_temp=loop->y;
         z_temp=loop->z;
         
-        if(!what)
-        {
+        if(!what) {
             loop->x=x_temp*cos_a-y_temp*sin_a;
             loop->y=x_temp*sin_a+y_temp*cos_a;
         }
 
-        if(what==1)
-        {
+        if(what==1) {
             loop->x=x_temp*cos_b-z_temp*sin_b;
             loop->z=x_temp*sin_b+z_temp*cos_b;
         }
 
-        if(what==2)
-        {
+        if(what==2) {
             loop->y=y_temp*cos_b-z_temp*sin_b;
             loop->z=y_temp*sin_b+z_temp*cos_b;
         }
+
 
         loop=loop->NextLink_forward();
     }
@@ -438,79 +470,81 @@ int p_atom::Rotation(char what)
 }
 
 
-int main()
+int main(int argc, char* argv[])
 {
-  
-   char* dir1="c:\\path_to";
-   char* dir2="c:\\path_to";
-
+   
+    
    WIN32_FIND_DATA FileData; 
    HANDLE hSearch;    
    BOOL fFinished = FALSE; 
 
    p_atom* carbon;
            
-   if (_chdir(dir1)==0)
-   {
-        hSearch = FindFirstFile("test2_2h_3.pdb", &FileData); 
-        if (hSearch == INVALID_HANDLE_VALUE) 
-        { 
-             printf("No files found.");       
-        } 
-	else
-        {	
-	     while (!fFinished) 
-             {  
-		 if (!fFinished)	      
-                 {
-                        printf("%s\n",FileData.cFileName);
-
-                        // START
-                        carbon=new p_atom;
-                        carbon=carbon->Load(FileData.cFileName);
-                    
-                        carbon->MinMax();
-                        carbon->Translation();
-
-                        carbon->Save(FileData.cFileName,dir1,"transl.pdb");
-
-                        carbon->Rotation(0);                    
-                        carbon->Rotation(1);
-                    
-                        carbon->Save(FileData.cFileName,dir1,"test_pdb.trn");	
-
-                        carbon->Distance();
-                        carbon->Rotation(2);
-                                                            
-                        _chdir(dir2);
-                        carbon->Save(FileData.cFileName,dir1,"rot.pdb");				
-                        _chdir(dir1);
-
-                         delete carbon;
-                         carbon=NULL;					
-                         p_atom::First=NULL;
-
-                         // FINISH
-					
-                        fFinished=FALSE;
-					 
-                        if (!FindNextFile(hSearch, &FileData)) 
-                        {
-                            if (GetLastError() == ERROR_NO_MORE_FILES){ 
-                                                         
-                                fFinished = TRUE; 
-                                _chdir(dir2);
-                            } 
-                            else{ 
-                             
-                               printf("Couldn't find next file."); 
-                                return 0;
-                            } 
-                        }
-                 }
-             }
-        }
+   if (argc < 2){
+       printf("PDB file required.");
+       exit(1);
    }
+  
+   hSearch = FindFirstFile(argv[1], &FileData); 
+   if (hSearch == INVALID_HANDLE_VALUE){ 
+       printf("No files found.");       
+   } 
+   else {	
+       while (!fFinished) {  
+           if (!fFinished) {
+               printf("%s\n",FileData.cFileName);
+               
+               // START
+               carbon=new p_atom;
+               carbon=carbon->Load(FileData.cFileName);                    
+               carbon->MinMax();
+               carbon->Translation();
+
+               carbon->Save(FileData.cFileName, "transl.pdb");
+
+               carbon->Rotation(0);                    
+               carbon->Rotation(1);
+
+                    
+               carbon->Save(FileData.cFileName, "test_pdb.trn");	
+
+               carbon->Distance();
+               carbon->Rotation(2);
+                                                            
+               
+               carbon->Save(FileData.cFileName, "rot.pdb");				
+               
+               p_atom* pDel = carbon;
+               while (pDel != NULL) {
+                   
+                   carbon = carbon->NextLink();
+                   delete pDel;
+                   pDel = NULL;
+                   
+                   pDel = carbon;
+               }
+               //delete carbon;
+			   // carbon=NULL;					
+               //p_atom::First=NULL;
+
+                // FINISH
+					
+                fFinished=FALSE;
+					 
+                if (!FindNextFile(hSearch, &FileData)) {
+                    if (GetLastError() == ERROR_NO_MORE_FILES) {                             
+                        fFinished = TRUE; 
+                       
+                    } 
+                    else { 
+                        printf("Couldn't find next file."); 
+                        return 0;
+                    } 
+                }
+           }
+       }
+   }
+	
 
    return 0;
 }
