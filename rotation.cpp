@@ -414,30 +414,50 @@ int p_atom::Rotation(char what)
     float x_temp,y_temp,z_temp;
     double sin_a,cos_a;
     double sin_b,cos_b;
+    double alpha, beta, gamma;
     double R;
     float mp;
     
     if (!what) {
-        mp=(-1)*((max_x)/fabs(max_x))*((max_y)/fabs(max_y));
-
-        R=sqrt(pow(max_x-min_x,2)+pow(max_y-min_y,2)                     );
-        sin_a=mp*abs(max_y-min_y)/R;  cos_a=(max_x-min_x)/R;  //rotation in XY plane
+       if (max_x*max_y > 0)
+            mp = -1;
+        else
+            mp = +1;
+        
+        R = sqrt(pow(max_x - min_x, 2) + pow(max_y - min_y, 2));
+        sin_a = mp*abs(max_y - min_y) / R;  cos_a = mp*abs(max_x - min_x) / R;  //rotation in XY plane
+        alpha = mp*abs(asin((max_y - min_y) / R));
+        sin_a = sin(alpha); cos_a = cos(alpha);
     }
 
     if (what==1) {
-        mp=-1*((max_x)/fabs(max_x))*((max_z)/fabs(max_z));
-        R=sqrt(pow(max_x-min_x,2)+                     pow(max_z-min_z,2));
-        sin_b=mp*abs(max_z-min_z)/R;  cos_b=(max_x-min_x)/R;  //rotation in XZ plane
+      if (max_x*max_z > 0)
+            mp = -1;
+        else
+            mp = 1;        
+
+        R = sqrt(pow(max_x - min_x, 2) + pow(max_z - min_z, 2));
+        beta = mp*abs(asin((max_z - min_z) / R));
+        sin_b = mp*abs(max_z - min_z) / R;  cos_b = abs(max_x - min_x) / R;  //rotation in XZ plane
+        sin_b = sin(beta); cos_b = cos(beta);
     }
 
     if (what==2){
-        max_x=p_atom::max_3->x,  min_x=p_atom::max_3->x;
-        max_y=p_atom::max_3->y,  min_y=0;
-        max_z=p_atom::max_3->z,  min_z=0;
+       max_x = p_atom::max_3->x, min_x = p_atom::max_3->x;
+        max_y = p_atom::max_3->y, min_y = 0;
+        max_z = p_atom::max_3->z, min_z = 0;
 
-        mp=1*((max_y)/fabs(max_y))*((max_z)/fabs(max_z));
-        R=                          sqrt(pow(max_y-min_y,2)+ pow(max_z-min_z,2));
-        sin_b=mp*abs(max_y-min_y)/R;  cos_b=(max_z-min_z)/R;  //rotation in XZ plane
+        mp = 1 * ((max_y) / fabs(max_y))*((max_z) / fabs(max_z));
+
+        if (max_y*max_z > 0)
+            mp = -1;
+        else
+            mp = 1;                
+
+        R = sqrt(pow(max_y - min_y, 2) + pow(max_z - min_z, 2));
+        sin_b = mp*abs(max_y - min_y) / R;  cos_b = (max_z - min_z) / R;  //rotation in XZ plane
+        gamma = mp*abs(asin((max_y - min_y) / R));
+        sin_b = sin(gamma); cos_b = cos(gamma);
     }
 
     while(loop)
