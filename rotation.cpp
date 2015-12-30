@@ -101,7 +101,6 @@ p_atom* p_atom::max_2;
 p_atom* p_atom::max_3;
 
 
-
 p_atom* p_atom::Load(char* cFileName)
 {       
     p_atom* carbon;
